@@ -1,7 +1,10 @@
 "use client"
 
-import { usePageView } from "@/hooks/usePageView"
-import type { AnalyticsEvent, AnalyticsProperties } from "@/lib/analytics"
+import { usePageView } from "@/features/analytics/hooks/usePageView"
+import type {
+  AnalyticsEvent,
+  AnalyticsProperties,
+} from "@/features/analytics/services/analytics.service"
 
 interface PageViewTrackerProps {
   event: AnalyticsEvent

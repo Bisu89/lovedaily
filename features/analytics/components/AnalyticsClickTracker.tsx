@@ -2,7 +2,11 @@
 
 import { useEffect } from "react"
 
-import { track, type AnalyticsEvent, type AnalyticsProperties } from "@/lib/analytics"
+import {
+  track,
+  type AnalyticsEvent,
+  type AnalyticsProperties,
+} from "@/features/analytics/services/analytics.service"
 
 const EVENT_ATTR = "data-analytics-event"
 const PROPS_ATTR = "data-analytics-props"

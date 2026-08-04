@@ -82,10 +82,11 @@ class SupabaseAnalyticsProvider implements AnalyticsProvider {
  * MixpanelProvider) and add an instance to this array. Every call site in
  * the app only ever calls track() below, so nothing else changes.
  */
-const providers: AnalyticsProvider[] = [
-  new ConsoleAnalyticsProvider(),
-  new SupabaseAnalyticsProvider(),
-]
+const providers: AnalyticsProvider[] = [new SupabaseAnalyticsProvider()]
+
+if (process.env.NODE_ENV === "development") {
+  providers.push(new ConsoleAnalyticsProvider())
+}
 
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_FB_PIXEL_ID) {
   providers.push(new FacebookPixelProvider())

@@ -1,9 +1,15 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 
 import { getSupabaseAdminClient } from "@/lib/supabase/admin"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { StatTile } from "@/features/admin/components/StatTile"
+
+export const metadata: Metadata = {
+  title: "Admin — LoveDaily",
+  robots: { index: false, follow: false },
+}
 
 function isAdminEmail(email: string): boolean {
   const allowlist = (process.env.ADMIN_EMAILS ?? "")

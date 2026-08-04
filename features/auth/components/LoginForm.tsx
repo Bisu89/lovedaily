@@ -70,6 +70,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         <Input
           type="email"
           required
+          aria-label="Email address"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@email.com"

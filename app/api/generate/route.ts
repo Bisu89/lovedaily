@@ -99,29 +99,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 400 })
   }
 
-  // Auth is required once Supabase is configured. Until then, a valid email
-  // is required instead — the same "sign in before generating" requirement,
-  // just satisfiable without a live Supabase project during local dev.
+  // A signed-in Supabase user is preferred, but the EmailGate (used when
+  // someone hasn't signed in — or Supabase isn't configured at all) is an
+  // equally valid path. Only reject when neither is present.
   const supabase = await getSupabaseServerClient()
-  let userId: string | null = null
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null
+  const userId = user?.id ?? null
 
-  if (supabase) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Please sign in to generate a letter." },
-        { status: 401 }
-      )
-    }
-
-    userId = user.id
-  } else if (!generateRequest.email || !isValidEmail(generateRequest.email)) {
+  if (!userId && (!generateRequest.email || !isValidEmail(generateRequest.email))) {
     return NextResponse.json(
-      { error: "Please enter your email to generate a letter." },
-      { status: 400 }
+      { error: "Please sign in or enter your email to generate a letter." },
+      { status: 401 }
     )
   }
 

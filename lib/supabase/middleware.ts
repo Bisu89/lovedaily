@@ -3,7 +3,12 @@ import { NextResponse, type NextRequest } from "next/server"
 
 import type { Database } from "@/lib/supabase/database.types"
 
-const PROTECTED_PATHS = ["/generate", "/admin"]
+// /generate is intentionally NOT here: anonymous visitors must be able to
+// load the page and see the EmailGate (the "email login" fallback) before
+// they have any session or cookie — redirecting them to /login here would
+// make that flow unreachable. /api/generate enforces auth-or-email
+// server-side instead. /admin has no such fallback, so it stays protected.
+const PROTECTED_PATHS = ["/admin"]
 
 /**
  * Refreshes the Supabase session on every request (required for SSR auth

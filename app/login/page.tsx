@@ -1,7 +1,13 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { Heart } from "lucide-react"
 
 import { LoginForm } from "@/features/auth/components/LoginForm"
+
+export const metadata: Metadata = {
+  title: "Sign In — LoveDaily",
+  description: "Sign in to LoveDaily to start writing something beautiful.",
+}
 
 interface LoginPageProps {
   searchParams: Promise<{ next?: string }>

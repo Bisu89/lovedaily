@@ -2,7 +2,7 @@
 
 import { Sparkles } from "lucide-react"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { useCheckout } from "@/features/billing/hooks/useCheckout"
 import type { PlanId } from "@/features/billing/types/billing"
 import { Badge } from "@/components/ui/badge"

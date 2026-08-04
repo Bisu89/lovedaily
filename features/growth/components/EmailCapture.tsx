@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { useEmailCapture } from "@/features/growth/hooks/useEmailCapture"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -62,6 +62,7 @@ export function EmailCapture({ source, email: knownEmail }: EmailCaptureProps) {
         <Input
           type="email"
           required
+          aria-label="Email address"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@email.com"

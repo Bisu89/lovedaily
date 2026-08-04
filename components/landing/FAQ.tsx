@@ -1,6 +1,6 @@
 "use client"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { SectionHeading } from "@/components/landing/SectionHeading"
 import {
   Accordion,
@@ -13,7 +13,7 @@ const faqs = [
   {
     question: "Is LoveDaily really free to use?",
     answer:
-      "Yes. Every account gets 3 free AI generations per day with no credit card required. Upgrade to Premium whenever you want unlimited messages.",
+      "Yes. LoveDaily is completely free to use — no credit card required.",
   },
   {
     question: "Can LoveDaily write in Spanish?",
@@ -21,19 +21,9 @@ const faqs = [
       "Yes. LoveDaily writes naturally in Spanish, matching the tone and warmth you'd use with your partner.",
   },
   {
-    question: "What do I get with Premium?",
-    answer:
-      "Premium unlocks unlimited generations, PDF downloads, saved history and premium templates for $9/month, or $49 as a one-time lifetime payment.",
-  },
-  {
     question: "Can I edit or regenerate a message?",
     answer:
       "Yes. If a message isn't quite right, you can regenerate it as many times as you like until it feels like you.",
-  },
-  {
-    question: "Can I cancel my subscription anytime?",
-    answer:
-      "Yes. Premium is billed monthly and you can cancel anytime — you'll keep access until the end of your billing period.",
   },
 ]
 

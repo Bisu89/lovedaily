@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { generatorService } from "@/features/generator/services/generator.service"
 import { TEMPLATES } from "@/features/generator/services/templates"
 import type { GenerateResponse, Language, Tone } from "@/features/generator/types/generate"

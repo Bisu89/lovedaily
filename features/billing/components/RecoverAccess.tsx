@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { useRecoverAccess } from "@/features/billing/hooks/useRecoverAccess"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

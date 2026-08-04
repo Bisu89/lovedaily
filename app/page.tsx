@@ -1,14 +1,14 @@
 import Link from "next/link"
 import { Heart } from "lucide-react"
 
-import { PageViewTracker } from "@/components/analytics/PageViewTracker"
+import { PageViewTracker } from "@/features/analytics/components/PageViewTracker"
 import { Benefits } from "@/components/landing/Benefits"
 import { CTA } from "@/components/landing/CTA"
 import { FAQ } from "@/components/landing/FAQ"
 import { Hero } from "@/components/landing/Hero"
 import { HowItWorks } from "@/components/landing/HowItWorks"
-import { PricingPreview } from "@/components/landing/PricingPreview"
 import { Tools } from "@/components/landing/Tools"
+import { SupportButton } from "@/features/growth/components/SupportButton"
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
@@ -22,18 +22,21 @@ export default function Home() {
             <Heart className="size-5 text-primary" aria-hidden="true" />
             LoveDaily
           </a>
-          <Button
-            nativeButton={false}
-            render={
-              <Link
-                href="/generate"
-                data-analytics-event="CTA Clicked"
-                data-analytics-props='{"label":"Start Free","location":"header"}'
-              >
-                Start Free
-              </Link>
-            }
-          />
+          <div className="flex items-center gap-2">
+            <SupportButton location="header" />
+            <Button
+              nativeButton={false}
+              render={
+                <Link
+                  href="/generate"
+                  data-analytics-event="CTA Clicked"
+                  data-analytics-props='{"label":"Start Free","location":"header"}'
+                >
+                  Start Free
+                </Link>
+              }
+            />
+          </div>
         </div>
       </header>
 
@@ -42,14 +45,17 @@ export default function Home() {
         <Benefits />
         <Tools />
         <HowItWorks />
-        <PricingPreview />
+        {/* PricingPreview is intentionally not rendered — no paid plan
+            exists yet (growth-first launch). Component is kept in
+            components/landing/PricingPreview.tsx for when Premium ships. */}
         <FAQ />
         <CTA />
       </main>
 
       <footer className="border-t border-border py-8">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
-          © {new Date().getFullYear()} LoveDaily. Made for couples in Colombia.
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
+          <SupportButton location="footer" />
+          <p>© {new Date().getFullYear()} LoveDaily. Made for couples in Colombia.</p>
         </div>
       </footer>
     </>

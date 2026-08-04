@@ -1,7 +1,12 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { Heart } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+
+export const metadata: Metadata = {
+  title: "Page Not Found — LoveDaily",
+}
 
 export default function NotFound() {
   return (

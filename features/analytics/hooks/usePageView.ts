@@ -2,8 +2,11 @@
 
 import { useEffect } from "react"
 
-import { useAnalytics } from "@/hooks/useAnalytics"
-import type { AnalyticsEvent, AnalyticsProperties } from "@/lib/analytics"
+import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
+import type {
+  AnalyticsEvent,
+  AnalyticsProperties,
+} from "@/features/analytics/services/analytics.service"
 
 /**
  * Fires an analytics event once when the component mounts. Used for

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-import { AnalyticsClickTracker } from "@/components/analytics/AnalyticsClickTracker";
-import { FacebookPixelScript } from "@/components/analytics/FacebookPixelScript";
+import { AnalyticsClickTracker } from "@/features/analytics/components/AnalyticsClickTracker";
+import { FacebookPixelScript } from "@/features/analytics/components/FacebookPixelScript";
 
 const geistSans = Geist({
   variable: "--font-sans",
