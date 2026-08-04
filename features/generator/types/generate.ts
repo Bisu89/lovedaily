@@ -20,4 +20,8 @@ export interface GenerateResponse {
   templateId: RelationshipTemplateId
   content: string
   generatedAt: string
+  /** Public share-page id (/message/[shareId]) — null if saving it failed
+   *  or Supabase isn't configured. Sharing is best-effort, never blocks
+   *  generation. */
+  shareId: string | null
 }

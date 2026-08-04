@@ -10,14 +10,17 @@ import { useUser } from "@/features/auth/hooks/useUser"
 import { SupportButton } from "@/features/growth/components/SupportButton"
 import { EmailCapture } from "@/features/growth/components/EmailCapture"
 import { EmailGate } from "@/features/growth/components/EmailGate"
+import { LoveCardPreview } from "@/features/sharing/components/LoveCardPreview"
+import { ShareActions } from "@/features/sharing/components/ShareActions"
 import { ErrorState } from "@/features/generator/components/ErrorState"
 import { GenerateButton } from "@/features/generator/components/GenerateButton"
 import { LoadingState } from "@/features/generator/components/LoadingState"
 import { RelationshipForm } from "@/features/generator/components/RelationshipForm"
-import { ResultCard } from "@/features/generator/components/ResultCard"
 import { TemplateSelector } from "@/features/generator/components/TemplateSelector"
 import { useGenerator, type GeneratorStatus } from "@/features/generator/hooks/useGenerator"
 import { TEMPLATES } from "@/features/generator/services/templates"
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001"
 
 export function GeneratePageClient() {
   const {
@@ -87,10 +90,6 @@ export function GeneratePageClient() {
     void generate(effectiveEmail ?? undefined)
   }
 
-  function handleCopy() {
-    track("Copy Clicked", { templateId })
-  }
-
   const isLoading = status === "loading"
 
   return (
@@ -155,19 +154,38 @@ export function GeneratePageClient() {
       )}
 
       {isLoading || result || status === "error" ? (
-        <div ref={resultRef}>
+        <div ref={resultRef} className="flex flex-col items-center gap-6">
           {isLoading ? (
             <LoadingState />
           ) : result ? (
-            <ResultCard
-              result={result}
-              relationship={values.relationship}
-              onRegenerate={handleRegenerate}
-              isRegenerating={isLoading}
-              errorMessage={status === "error" ? error : null}
-              onCopy={handleCopy}
-              showPremiumUpsell={false}
-            />
+            <>
+              <p className="flex items-center gap-2 text-base font-semibold">
+                <span aria-hidden="true">❤️</span>
+                Your message is ready
+              </p>
+              <div className="w-full max-w-sm">
+                <LoveCardPreview
+                  content={result.content}
+                  relationship={values.relationship}
+                  templateId={result.templateId}
+                />
+              </div>
+              <div className="w-full max-w-sm">
+                <ShareActions
+                  content={result.content}
+                  shareUrl={result.shareId ? `${siteUrl}/message/${result.shareId}` : null}
+                  imageUrl={result.shareId ? `${siteUrl}/api/share-image/${result.shareId}` : null}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleRegenerate}
+                disabled={isLoading}
+                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline disabled:pointer-events-none disabled:opacity-50"
+              >
+                ✨ Generate another
+              </button>
+            </>
           ) : status === "error" && error ? (
             <ErrorState
               message={error}

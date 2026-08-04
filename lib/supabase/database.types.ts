@@ -179,6 +179,39 @@ export interface Database {
         }
         Relationships: []
       }
+      shared_messages: {
+        Row: {
+          id: string
+          content: string
+          template_id: string
+          relationship: string | null
+          tone: string | null
+          language: string | null
+          user_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          content: string
+          template_id: string
+          relationship?: string | null
+          tone?: string | null
+          language?: string | null
+          user_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          content?: string
+          template_id?: string
+          relationship?: string | null
+          tone?: string | null
+          language?: string | null
+          user_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           id: string

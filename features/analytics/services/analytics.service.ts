@@ -11,6 +11,7 @@ export type AnalyticsEvent =
   | "Purchase Completed"
   | "FAQ Expanded"
   | "CTA Clicked"
+  | "Message Viewed"
 
 export type AnalyticsProperties = Record<
   string,

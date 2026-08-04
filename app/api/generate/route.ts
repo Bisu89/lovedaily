@@ -17,6 +17,7 @@ import {
 } from "@/features/generator/services/dailyLimit"
 import { AiServiceError, generateText } from "@/services/ai/openai.service"
 import { buildPrompt } from "@/services/ai/prompt-builder"
+import { shareMessage } from "@/features/sharing/services/shareMessage.service"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import type { Database } from "@/lib/supabase/database.types"
 
@@ -168,11 +169,21 @@ export async function POST(request: NextRequest) {
     const prompt = buildPrompt(generateRequest)
     const content = await generateText(prompt)
 
+    const shareId = await shareMessage({
+      content,
+      templateId: generateRequest.templateId,
+      relationship: generateRequest.relationship,
+      tone: generateRequest.tone,
+      language: generateRequest.language,
+      userId,
+    })
+
     const generateResponse: GenerateResponse = {
       id: crypto.randomUUID(),
       templateId: generateRequest.templateId,
       content,
       generatedAt: new Date().toISOString(),
+      shareId,
     }
 
     if (supabase && userId) {

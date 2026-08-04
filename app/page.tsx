@@ -11,9 +11,26 @@ import { Tools } from "@/components/landing/Tools"
 import { SupportButton } from "@/features/growth/components/SupportButton"
 import { Button } from "@/components/ui/button"
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001"
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "LoveDaily",
+  url: siteUrl,
+  description:
+    "Generate heartfelt letters, messages and relationship ideas in seconds with AI.",
+  applicationCategory: "LifestyleApplication",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+}
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PageViewTracker event="Landing Viewed" />
 
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-sm">
