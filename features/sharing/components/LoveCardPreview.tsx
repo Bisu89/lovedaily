@@ -26,10 +26,10 @@ interface LoveCardPreviewProps {
 /** The in-app card shown after generating and on /message/[id]. Uses the
  *  same tone palette and message-fitting rules as the downloadable PNG
  *  (loveCardImage.tsx) so what's on screen matches what gets shared. The
- *  logo is pinned to the top corner (out of flow) and the message block
- *  is vertically centered in the remaining space, so short and long
- *  messages both sit naturally instead of leaving a large gap under the
- *  logo. */
+ *  message block is vertically centered in the card, so short and long
+ *  messages both sit naturally — the "Generated with LoveDaily.app"
+ *  footer is the only brand mark, no separate logo up top competing
+ *  with it for space. */
 export function LoveCardPreview({ content, relationship, templateId }: LoveCardPreviewProps) {
   const palette = TONE_PALETTES[toneFor(templateId)]
   const { text, tier } = fitCardMessage(content)
@@ -41,14 +41,6 @@ export function LoveCardPreview({ content, relationship, templateId }: LoveCardP
         backgroundImage: `radial-gradient(120% 90% at 15% 0%, ${palette.to} 0%, transparent 55%), linear-gradient(160deg, ${palette.from}, #ffffff 65%)`,
       }}
     >
-      <div
-        className="absolute top-[9%] left-[9%] flex items-center gap-2 text-base font-bold sm:text-lg"
-        style={{ color: CARD_INK }}
-      >
-        <span aria-hidden="true">❤️</span>
-        LoveDaily
-      </div>
-
       <div className="flex flex-1 flex-col justify-center">
         {relationship ? (
           <div

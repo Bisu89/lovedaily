@@ -64,7 +64,6 @@ export async function renderLoveCardImage({
     (
       <div
         style={{
-          position: "relative",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -74,20 +73,6 @@ export async function renderLoveCardImage({
           fontFamily: "sans-serif",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 96,
-            left: 92,
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-          }}
-        >
-          <span style={{ fontSize: 40 }}>❤️</span>
-          <span style={{ fontSize: 34, fontWeight: 700, color: CARD_INK }}>LoveDaily</span>
-        </div>
-
         <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
           {relationship ? (
             <div
