@@ -163,14 +163,14 @@ export function GeneratePageClient() {
                 <span aria-hidden="true">❤️</span>
                 Your message is ready
               </p>
-              <div className="w-full max-w-sm">
+              <div className="w-full max-w-md">
                 <LoveCardPreview
                   content={result.content}
                   relationship={values.relationship}
                   templateId={result.templateId}
                 />
               </div>
-              <div className="w-full max-w-sm">
+              <div className="w-full max-w-md">
                 <ShareActions
                   content={result.content}
                   shareUrl={result.shareId ? `${siteUrl}/message/${result.shareId}` : null}

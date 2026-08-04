@@ -35,8 +35,8 @@ export type CardMessageTier = "lg" | "md" | "sm" | "xs"
  *  (absolute px) each map a tier to their own size. Used by both so what
  *  you see is exactly what gets shared. */
 export function fitCardMessage(content: string): { text: string; tier: CardMessageTier } {
-  if (content.length <= 160) return { text: content, tier: "lg" }
-  if (content.length <= 280) return { text: content, tier: "md" }
-  if (content.length <= 420) return { text: content, tier: "sm" }
-  return { text: `${content.slice(0, 417).trimEnd()}…`, tier: "xs" }
+  if (content.length <= 180) return { text: content, tier: "lg" }
+  if (content.length <= 300) return { text: content, tier: "md" }
+  if (content.length <= 440) return { text: content, tier: "sm" }
+  return { text: `${content.slice(0, 560).trimEnd()}…`, tier: "xs" }
 }

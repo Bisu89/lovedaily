@@ -12,10 +12,10 @@ import {
 export const CARD_SIZE = { width: 1080, height: 1350 }
 
 const TIER_FONT_SIZE: Record<CardMessageTier, number> = {
-  lg: 56,
-  md: 46,
-  sm: 38,
-  xs: 32,
+  lg: 72,
+  md: 60,
+  sm: 50,
+  xs: 42,
 }
 
 async function loadPlayfairItalic(text: string): Promise<ArrayBuffer | null> {
@@ -64,6 +64,7 @@ export async function renderLoveCardImage({
     (
       <div
         style={{
+          position: "relative",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -73,41 +74,49 @@ export async function renderLoveCardImage({
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 96,
+            left: 92,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+          }}
+        >
           <span style={{ fontSize: 40 }}>❤️</span>
           <span style={{ fontSize: 34, fontWeight: 700, color: CARD_INK }}>LoveDaily</span>
         </div>
 
-        {relationship ? (
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center" }}>
+          {relationship ? (
+            <div
+              style={{
+                display: "flex",
+                fontSize: 30,
+                fontWeight: 700,
+                letterSpacing: 4,
+                textTransform: "uppercase",
+                color: palette.accent,
+              }}
+            >
+              For {relationship}
+            </div>
+          ) : null}
+
           <div
             style={{
               display: "flex",
-              marginTop: "auto",
-              fontSize: 26,
-              fontWeight: 700,
-              letterSpacing: 4,
-              textTransform: "uppercase",
-              color: palette.accent,
+              marginTop: relationship ? 28 : 0,
+              fontSize,
+              lineHeight: 1.42,
+              color: CARD_INK,
+              fontFamily: fontData ? "Playfair Display" : "serif",
+              fontStyle: "italic",
             }}
           >
-            For {relationship}
+            &ldquo;{text}&rdquo;
           </div>
-        ) : (
-          <div style={{ display: "flex", marginTop: "auto" }} />
-        )}
-
-        <div
-          style={{
-            display: "flex",
-            marginTop: 20,
-            fontSize,
-            lineHeight: 1.45,
-            color: CARD_INK,
-            fontFamily: fontData ? "Playfair Display" : "serif",
-            fontStyle: "italic",
-          }}
-        >
-          &ldquo;{text}&rdquo;
         </div>
 
         <div
@@ -116,12 +125,11 @@ export async function renderLoveCardImage({
             width: 64,
             height: 2,
             backgroundColor: "rgba(43,18,20,0.16)",
-            marginTop: 56,
             marginBottom: 40,
           }}
         />
 
-        <div style={{ display: "flex", fontSize: 22, color: CARD_INK_SOFT }}>
+        <div style={{ display: "flex", fontSize: 24, color: CARD_INK_SOFT }}>
           Generated with LoveDaily.app ❤️
         </div>
       </div>
