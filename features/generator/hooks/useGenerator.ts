@@ -3,7 +3,10 @@
 import { useCallback, useState } from "react"
 
 import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
-import { generatorService } from "@/features/generator/services/generator.service"
+import {
+  generatorService,
+  GenerationFailedError,
+} from "@/features/generator/services/generator.service"
 import { TEMPLATES } from "@/features/generator/services/templates"
 import type { GenerateResponse, Language, Tone } from "@/features/generator/types/generate"
 import type { RelationshipTemplateId } from "@/features/generator/types/template"
@@ -42,6 +45,7 @@ export function useGenerator() {
   const [status, setStatus] = useState<GeneratorStatus>("idle")
   const [result, setResult] = useState<GenerateResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [errorCode, setErrorCode] = useState<string | null>(null)
   const { track } = useAnalytics()
 
   const updateField = useCallback(
@@ -68,6 +72,7 @@ export function useGenerator() {
 
     setStatus("loading")
     setError(null)
+    setErrorCode(null)
     try {
       const response = await generatorService.generateMessage({
         templateId,
@@ -87,6 +92,7 @@ export function useGenerator() {
           ? caught.message
           : "Something went wrong. Please try again."
       setError(message)
+      setErrorCode(caught instanceof GenerationFailedError ? (caught.code ?? null) : null)
       setStatus("error")
       track("Generation Failed", { templateId, reason: message })
     }
@@ -99,6 +105,7 @@ export function useGenerator() {
     setStatus("idle")
     setResult(null)
     setError(null)
+    setErrorCode(null)
   }, [])
 
   return {
@@ -110,6 +117,7 @@ export function useGenerator() {
     status,
     result,
     error,
+    errorCode,
     generate,
     reset,
   }

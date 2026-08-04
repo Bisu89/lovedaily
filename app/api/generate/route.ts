@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { TEMPLATES } from "@/features/generator/services/templates"
@@ -8,6 +8,13 @@ import type {
   Language,
   Tone,
 } from "@/features/generator/types/generate"
+import {
+  ANONYMOUS_USAGE_COOKIE,
+  DAILY_GENERATION_LIMIT,
+  decodeAnonymousUsage,
+  encodeAnonymousUsage,
+  startOfTodayIso,
+} from "@/features/generator/services/dailyLimit"
 import { AiServiceError, generateText } from "@/services/ai/openai.service"
 import { buildPrompt } from "@/services/ai/prompt-builder"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
@@ -69,6 +76,20 @@ function validateRequest(body: unknown): GenerateRequest {
   }
 }
 
+async function countTodaysRequests(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<number> {
+  const { count } = await supabase
+    .from("ai_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("success", true)
+    .gte("created_at", startOfTodayIso())
+
+  return count ?? 0
+}
+
 /** Analytics failure should never break the user-facing generation flow. */
 async function recordRequest(
   supabase: SupabaseClient<Database>,
@@ -87,7 +108,7 @@ async function recordRequest(
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   let generateRequest: GenerateRequest
 
   try {
@@ -113,6 +134,36 @@ export async function POST(request: Request) {
     )
   }
 
+  // Daily abuse limit — generous for genuine use, costly to script around.
+  // Signed-in users are counted from ai_requests (survives cookie clearing);
+  // anonymous/email-gated visitors are counted via a signed cookie.
+  let anonymousUsage = 0
+  if (userId && supabase) {
+    const usedToday = await countTodaysRequests(supabase, userId)
+    if (usedToday >= DAILY_GENERATION_LIMIT) {
+      return NextResponse.json(
+        {
+          error:
+            "You've used all 10 free letters for today. If LoveDaily made your day a little sweeter, a coffee helps keep the AI running — see you again tomorrow!",
+          code: "rate_limited",
+        },
+        { status: 429 }
+      )
+    }
+  } else {
+    anonymousUsage = decodeAnonymousUsage(request.cookies.get(ANONYMOUS_USAGE_COOKIE)?.value)
+    if (anonymousUsage >= DAILY_GENERATION_LIMIT) {
+      return NextResponse.json(
+        {
+          error:
+            "You've used all 10 free letters for today. If LoveDaily made your day a little sweeter, a coffee helps keep the AI running — see you again tomorrow!",
+          code: "rate_limited",
+        },
+        { status: 429 }
+      )
+    }
+  }
+
   try {
     const prompt = buildPrompt(generateRequest)
     const content = await generateText(prompt)
@@ -134,7 +185,22 @@ export async function POST(request: Request) {
       })
     }
 
-    return NextResponse.json(generateResponse)
+    const response = NextResponse.json(generateResponse)
+
+    if (!userId) {
+      const token = encodeAnonymousUsage(anonymousUsage + 1)
+      if (token) {
+        response.cookies.set(ANONYMOUS_USAGE_COOKIE, token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24,
+        })
+      }
+    }
+
+    return response
   } catch (caught) {
     if (supabase && userId) {
       await recordRequest(supabase, {

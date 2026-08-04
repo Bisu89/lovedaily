@@ -3,7 +3,7 @@ const COFFEE_URL = process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_URL
 interface SupportButtonProps {
   /** Where this instance is rendered — tags the analytics event so the
    *  admin dashboard can tell which placement gets more clicks. */
-  location: "header" | "generate-header" | "footer" | "result"
+  location: "header" | "generate-header" | "footer" | "result" | "limit-reached"
 }
 
 /**

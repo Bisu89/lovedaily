@@ -29,6 +29,7 @@ export function GeneratePageClient() {
     status,
     result,
     error,
+    errorCode,
     generate,
     reset,
   } = useGenerator()
@@ -171,6 +172,7 @@ export function GeneratePageClient() {
             <ErrorState
               message={error}
               onRetry={() => void generate(effectiveEmail ?? undefined)}
+              rateLimited={errorCode === "rate_limited"}
             />
           ) : null}
         </div>

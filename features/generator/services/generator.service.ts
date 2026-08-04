@@ -3,9 +3,17 @@ import type { GenerateRequest, GenerateResponse } from "@/features/generator/typ
 const GENERATE_ENDPOINT = "/api/generate"
 
 export class GenerationFailedError extends Error {
-  constructor(message = "We couldn't write your letter this time. Please try again.") {
+  /** Machine-readable reason (e.g. "rate_limited") so the UI can react
+   *  beyond just showing the message — undefined for generic failures. */
+  code?: string
+
+  constructor(
+    message = "We couldn't write your letter this time. Please try again.",
+    code?: string
+  ) {
     super(message)
     this.name = "GenerationFailedError"
+    this.code = code
   }
 }
 
@@ -35,9 +43,9 @@ class ApiGeneratorService implements GeneratorService {
 
     if (!response.ok) {
       const body = (await response.json().catch(() => null)) as
-        | { error?: string }
+        | { error?: string; code?: string }
         | null
-      throw new GenerationFailedError(body?.error || undefined)
+      throw new GenerationFailedError(body?.error || undefined, body?.code)
     }
 
     return (await response.json()) as GenerateResponse
