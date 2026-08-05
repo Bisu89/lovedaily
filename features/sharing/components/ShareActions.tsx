@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Check, Download, Link as LinkIcon, MessageCircle, Share2 } from "lucide-react"
+import { Camera, Check, Download, Link as LinkIcon, MessageCircle, Share2 } from "lucide-react"
 
 import { useAnalytics } from "@/features/analytics/hooks/useAnalytics"
 import { Button } from "@/components/ui/button"
@@ -19,8 +19,8 @@ const COPIED_RESET_MS = 1800
 interface ShareActionsProps {
   content: string
   /** Full public URL for this message, or null if it couldn't be saved
-   *  (e.g. Supabase isn't configured) — WhatsApp/Facebook/Copy Link/IG
-   *  need a real link to point at, so those are hidden without one. */
+   *  (e.g. Supabase isn't configured) — Facebook/Copy Link need a real
+   *  link to point at, so those are hidden without one. */
   shareUrl: string | null
   imageUrl: string | null
 }
@@ -54,9 +54,23 @@ export function ShareActions({ content, shareUrl, imageUrl }: ShareActionsProps)
     if (succeeded) setTimeout(() => setLinkCopyState("idle"), COPIED_RESET_MS)
   }
 
-  async function handleSaveOrShareCard(label: string) {
+  async function handleSaveCard() {
     if (!imageUrl) return
-    track("CTA Clicked", { label, location: "share-actions" })
+    track("CTA Clicked", { label: "Save Card", location: "share-actions" })
+    await shareOrDownloadImage(imageUrl, "lovedaily-card.png", {
+      title: "LoveDaily",
+      text: content,
+    })
+  }
+
+  /** Instagram has no web share API of its own — the only way a website
+   *  can get an image in front of its Story composer is handing the OS
+   *  share sheet the actual image file, where Instagram can pick it up
+   *  (supported iOS/Android). Falls back to a plain download otherwise,
+   *  ready to attach manually. */
+  async function handleInstagram() {
+    if (!imageUrl) return
+    track("CTA Clicked", { label: "Instagram", location: "share-actions" })
     await shareOrDownloadImage(imageUrl, "lovedaily-card.png", {
       title: "LoveDaily",
       text: content,
@@ -96,7 +110,7 @@ export function ShareActions({ content, shareUrl, imageUrl }: ShareActionsProps)
           size="lg"
           className="h-12 text-base"
           disabled={!imageUrl}
-          onClick={() => void handleSaveOrShareCard("Save Card")}
+          onClick={() => void handleSaveCard()}
         >
           <Download className="size-4" aria-hidden="true" />
           Save Card
@@ -118,21 +132,32 @@ export function ShareActions({ content, shareUrl, imageUrl }: ShareActionsProps)
           <MessageCircle className="size-4" aria-hidden="true" />
           WhatsApp
         </Button>
+        <Button
+          variant="outline"
+          className="h-11 text-sm text-[#1877f2] hover:text-[#1877f2]"
+          disabled={!shareUrl}
+          onClick={handleFacebook}
+        >
+          Facebook
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <Button
+          variant="outline"
+          className={`h-11 text-sm text-[#d6448a] hover:text-[#d6448a] ${hasWebShare ? "" : "col-span-2"}`}
+          disabled={!imageUrl}
+          onClick={() => void handleInstagram()}
+        >
+          <Camera className="size-4" aria-hidden="true" />
+          Instagram
+        </Button>
         {hasWebShare ? (
           <Button variant="outline" className="h-11 text-sm" onClick={() => void handleShare()}>
             <Share2 className="size-4" aria-hidden="true" />
-            Share
+            More
           </Button>
-        ) : (
-          <Button
-            variant="outline"
-            className="h-11 text-sm text-[#1877f2] hover:text-[#1877f2]"
-            disabled={!shareUrl}
-            onClick={handleFacebook}
-          >
-            Facebook
-          </Button>
-        )}
+        ) : null}
       </div>
 
       {shareUrl ? (
