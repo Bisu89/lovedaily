@@ -161,8 +161,8 @@ export function ShareActions({ content, shareUrl, imageUrl }: ShareActionsProps)
       </div>
 
       {shareUrl ? (
-        <Button variant="ghost" className="h-10 text-sm text-muted-foreground" onClick={() => void handleCopyLink()}>
-          <LinkIcon className="size-3.5" aria-hidden="true" />
+        <Button variant="outline" className="h-11 text-sm" onClick={() => void handleCopyLink()}>
+          <LinkIcon className="size-4" aria-hidden="true" />
           {linkCopyState === "copied" ? "Link copied!" : "Copy Link"}
         </Button>
       ) : null}
